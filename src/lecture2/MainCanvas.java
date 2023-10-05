@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainCanvas extends JPanel {
-    private MainWindow controller;
+    private final MainWindow controller;
     private long lastFrameTime;
     MainCanvas(MainWindow controller) {
         setBackground(Color.BLUE);
