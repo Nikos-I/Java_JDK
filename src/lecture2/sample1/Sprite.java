@@ -1,4 +1,4 @@
-package lecture2;
+package lecture2.sample1;
 
 import java.awt.*;
 

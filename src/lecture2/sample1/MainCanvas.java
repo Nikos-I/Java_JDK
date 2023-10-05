@@ -1,4 +1,4 @@
-package lecture2;
+package lecture2.sample1;
 
 
 import javax.swing.*;
@@ -8,6 +8,7 @@ public class MainCanvas extends JPanel {
     private final MainWindow controller;
     private long lastFrameTime;
     MainCanvas(MainWindow controller) {
+
         setBackground(Color.BLUE);
 //        controller = null;
         this.controller = controller;

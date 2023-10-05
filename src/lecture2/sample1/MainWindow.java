@@ -1,4 +1,4 @@
-package lecture2;
+package lecture2.sample1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,8 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
         setTitle("Circles");
-        for (int i = 0; i < sprites.length; i++) {
+        sprites[0] = new Background() ;
+        for (int i = 1; i < sprites.length; i++) {
             sprites[i] = new Ball();
         }
         MainCanvas canvas = new MainCanvas(this);
