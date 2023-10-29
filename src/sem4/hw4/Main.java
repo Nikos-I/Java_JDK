@@ -8,7 +8,7 @@ import static sem4.hw4.Actions.*;
 public class Main {
     public static void main(String[] args) {
 
-        var staff = new ArrayList<Employee>(
+        var staff=new ArrayList<Employee>(
                 List.of(new Employee(0, "+7 (495) 111-38-24", "Иван", 10)));
 
         add(staff, "+7 (495) 464-38-24", "Александр", 10);
@@ -16,23 +16,26 @@ public class Main {
         add(staff, "+7 (495) 333-38-24", "Василий", 7);
         add(staff, "+7 (495) 444-44-24", "Михаил", 9);
         add(staff, "+7 (495) 555-38-24", "Вера", 8);
-        add(staff, "+7 (495) 666-38-24", "Александра", 15);
+        add(staff, "+7 (495) 666-38-24", "Михаил", 15);
 
-        System.out.println("Сотрудник со стажем 8:" + findByExperience(staff, 8));
-        Employee pp=findByExperience(staff, 20);
-        if (pp == null) {
-            System.out.println("нет такого");
+        staff.forEach(System.out::println);                // Список сотрудников
 
-        } else {
-            System.out.println("Сотрудник со стажем 20:" + pp);
+        int experience=20;                                 // поиск сотрудника со стажем
+        Employee pp=findByExperience(staff, experience);
+        if (pp == null)
+            System.out.println("нет сотрудника со стажем " + experience);
+        else {
+            System.out.println("Сотрудник со стажем " + experience + ": " + pp);
         }
 
-        staff.forEach(System.out::println);
+        String employeeName = "Михаил";                     // Телефоны сотрудников
+        var phonesByName=findPhonesByName(staff, employeeName);
+        System.out.println("Телефоны сотрудников по имени " + employeeName + ": " + phonesByName);
 
-        var phonesByName=findPhonesByName(staff, "Михаил");
-        System.out.println("Сотрудники по имени Михаил : " + phonesByName);
-
-        var idsByName=findSomething(staff, p -> p.getName() == "Владимир", p -> p.getEmployeeId());
-        System.out.println("ID Владимира: " + idsByName);
+        int employeeId = 4;                                 // Поиск сотрудника по табельному номеру
+        var idsByName=findSomething(staff, p -> {
+            return p.getEmployeeId() == employeeId;
+        }, Employee::getName);
+        System.out.println("Табельный номер " + employeeId + " принадлежит: " + idsByName);
     }
 }

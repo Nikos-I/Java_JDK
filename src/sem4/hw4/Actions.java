@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 public class Actions {
     static Employee findByExperience(List<Employee> list, int experience) {
-        assert list != null : "LIST";
         var opt = list.stream().filter(p -> p.getExperience() == experience).findAny();
         return opt.orElse(null);
     }
@@ -23,9 +22,7 @@ public class Actions {
 
     static void add(ArrayList<Employee> list, String phone, String name, int experience) {
         int nextId = 0;
-        if (list != null) {
-            nextId = list.stream().mapToInt(Employee::getEmployeeId).max().getAsInt()+1;
-        }
+        if (list != null) nextId=list.stream().mapToInt(Employee::getEmployeeId).max().getAsInt() + 1;
         list.add(new Employee(nextId, phone, name, experience));
     }
 
