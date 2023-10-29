@@ -33,9 +33,7 @@ public class Main {
         System.out.println("Телефоны сотрудников по имени " + employeeName + ": " + phonesByName);
 
         int employeeId = 4;                                 // Поиск сотрудника по табельному номеру
-        var idsByName=findSomething(staff, p -> {
-            return p.getEmployeeId() == employeeId;
-        }, Employee::getName);
+        var idsByName=findSomething(staff, p -> p.getEmployeeId() == employeeId, Employee::getName);
         System.out.println("Табельный номер " + employeeId + " принадлежит: " + idsByName);
     }
 }
