@@ -2,21 +2,25 @@ package sem6.hw6;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @SuppressWarnings("unused")
 public class MontiForm extends JDialog {
+    final String GOAT="Коза";
+    final String PRIZE="Приз";
+    final Integer WIN=1;
+    final Integer LOSS=0;
     Random generator=new Random();
     int userDoor, openDoor, otherDoor;
     int goatDoor1, goatDoor2, prizeDoor;
     Map<Integer, Integer> gameStatistic=new HashMap<Integer, Integer>();
-    Integer step = 1;
-
-    final String GOAT = "Коза";
-    final String PRIZE = "Приз";
-    final Integer WIN = 1;
-    final Integer LOSS = 0;
+    Integer step=1;
 
     private JPanel contentPane;
     private JButton btnStatistic;
@@ -91,12 +95,12 @@ public class MontiForm extends JDialog {
 
     private void onStatistic() {
         // add your code here
-        int statSize = gameStatistic.size();
-        int countWine =Collections.frequency(gameStatistic.values(), WIN);
-        int countLoss =Collections.frequency(gameStatistic.values(), LOSS);
-        float procWin =(float) ((float)countWine/(float)statSize*100.0);
-        float procLoss = (float)((float)countLoss/(float)statSize*100.0);
-        String hint =  String.format("Шагов: %d, Побед: %d (%5.2f%%), Поражений: %d (%5.2f%%)", statSize, countWine, procWin,  countLoss, procLoss);
+        int statSize=gameStatistic.size();
+        int countWine=Collections.frequency(gameStatistic.values(), WIN);
+        int countLoss=Collections.frequency(gameStatistic.values(), LOSS);
+        float procWin=(float) ((float) countWine / (float) statSize * 100.0);
+        float procLoss=(float) ((float) countLoss / (float) statSize * 100.0);
+        String hint=String.format("Шагов: %d, Побед: %d (%5.2f%%), Поражений: %d (%5.2f%%)", statSize, countWine, procWin, countLoss, procLoss);
 //        String hint =  String.format("Шагов: %d, Побед: %d (%f), Поражений: %d (%f)", statSize, countWine, countWine/statSize*100, countLoss, countLoss/statSize*100);
         lblHint.setText(hint);
 
@@ -158,13 +162,13 @@ public class MontiForm extends JDialog {
         btnChoice.setEnabled(false);
         btnResult.setEnabled(false);
 
-        String Hint = "Приз находится за дверью номер: " + prizeDoor;
+        String Hint="Приз находится за дверью номер: " + prizeDoor;
 
         if (userDoor == prizeDoor) {
             gameStatistic.put(step, WIN);
-            Hint = Hint + " Поздравляем! Вы выиграли приз!";
+            Hint=Hint + " Поздравляем! Вы выиграли приз!";
         } else {
-            Hint = Hint + " Извините. Вы проиграли игру.";
+            Hint=Hint + " Извините. Вы проиграли игру.";
             gameStatistic.put(step, LOSS);
         }
         step++;
@@ -176,7 +180,8 @@ public class MontiForm extends JDialog {
         }
         lblHint.setText(Hint);
     }
-    void setInitialForm(){
+
+    void setInitialForm() {
         btnDoor1.setBackground(Color.LIGHT_GRAY);
         btnDoor2.setBackground(Color.LIGHT_GRAY);
         btnDoor3.setBackground(Color.LIGHT_GRAY);
@@ -188,7 +193,8 @@ public class MontiForm extends JDialog {
         btnDoor2.setEnabled(true);
         btnDoor3.setEnabled(true);
     }
-    void initForm(){
+
+    void initForm() {
         btnDoor1.setEnabled(false);
         btnDoor2.setEnabled(false);
         btnDoor3.setEnabled(false);
