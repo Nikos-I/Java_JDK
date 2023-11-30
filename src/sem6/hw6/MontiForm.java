@@ -3,16 +3,24 @@ package sem6.hw6;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
+import java.util.*;
 
+@SuppressWarnings("unused")
 public class MontiForm extends JDialog {
     Random generator=new Random();
     int userDoor, openDoor, otherDoor;
     int goatDoor1, goatDoor2, prizeDoor;
+    Map<Integer, Integer> gameStatistic=new HashMap<Integer, Integer>();
+    Integer step = 1;
+
+    final String GOAT = "Коза";
+    final String PRIZE = "Приз";
+    final Integer WIN = 1;
+    final Integer LOSS = 0;
 
     private JPanel contentPane;
-    private JButton buttonOK;
-    private JButton buttonCancel;
+    private JButton btnStatistic;
+    private JButton btnFinish;
     private JPanel gamePane;
     private JButton btnDoor1;
     private JButton btnDoor2;
@@ -28,82 +36,48 @@ public class MontiForm extends JDialog {
     public MontiForm() {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(btnStatistic);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        initForm();
 
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        btnStatistic.addActionListener(e -> onStatistic());
+
+        btnFinish.addActionListener(e -> onFinish());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onFinish();
             }
         });
         // call onCancel() on ESCAPE
 
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onFinish(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        btnRun.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onRun();
-            }
-        });
+        btnRun.addActionListener(e -> onRun());
 
-        btnChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onChoice();
-            }
+        btnChoice.addActionListener(e -> onChoice());
+
+        btnResult.addActionListener(e -> onResult());
+
+        btnDoor1.addActionListener(e -> {
+            btnDoor1.setBackground(Color.MAGENTA);
+            btnDoor2.setBackground(Color.LIGHT_GRAY);
+            btnDoor3.setBackground(Color.LIGHT_GRAY);
+            userDoor=1;
         });
-        btnResult.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnRun.setEnabled(true);
-                btnChoice.setEnabled(false);
-                btnResult.setEnabled(false);
-            }
+        btnDoor2.addActionListener(e -> {
+            btnDoor1.setBackground(Color.LIGHT_GRAY);
+            btnDoor2.setBackground(Color.MAGENTA);
+            btnDoor3.setBackground(Color.LIGHT_GRAY);
+            userDoor=2;
         });
-        btnDoor1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnDoor1.setBackground(Color.MAGENTA);
-                btnDoor2.setBackground(Color.BLACK);
-                btnDoor3.setBackground(Color.BLACK);
-                userDoor = 1;
-            }
-        });
-        btnDoor2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnDoor1.setBackground(Color.BLACK);
-                btnDoor2.setBackground(Color.MAGENTA);
-                btnDoor3.setBackground(Color.BLACK);
-                userDoor = 2;
-            }
-        });
-        btnDoor3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnDoor1.setBackground(Color.BLACK);
-                btnDoor2.setBackground(Color.BLACK);
-                btnDoor3.setBackground(Color.MAGENTA);
-                userDoor = 3;
-            }
+        btnDoor3.addActionListener(e -> {
+            btnDoor1.setBackground(Color.LIGHT_GRAY);
+            btnDoor2.setBackground(Color.LIGHT_GRAY);
+            btnDoor3.setBackground(Color.MAGENTA);
+            userDoor=3;
         });
     }
 
@@ -115,25 +89,36 @@ public class MontiForm extends JDialog {
         System.exit(0);
     }
 
-    private void onOK() {
+    private void onStatistic() {
         // add your code here
-        dispose();
+        int statSize = gameStatistic.size();
+        int countWine =Collections.frequency(gameStatistic.values(), WIN);
+        int countLoss =Collections.frequency(gameStatistic.values(), LOSS);
+        float procWin =(float) ((float)countWine/(float)statSize*100.0);
+        float procLoss = (float)((float)countLoss/(float)statSize*100.0);
+        String hint =  String.format("Шагов: %d, Побед: %d (%5.2f%%), Поражений: %d (%5.2f%%)", statSize, countWine, procWin,  countLoss, procLoss);
+//        String hint =  String.format("Шагов: %d, Побед: %d (%f), Поражений: %d (%f)", statSize, countWine, countWine/statSize*100, countLoss, countLoss/statSize*100);
+        lblHint.setText(hint);
+
     }
 
-    private void onCancel() {
+    private void onFinish() {
         // add your code here if necessary
         dispose();
     }
 
     private void onRun() {
+        // Начальные установки формы
+        setInitialForm();
+
         // Генерация дверей
-        int prizeDoor=generator.nextInt(3) + 1;
-        int goatDoor1=prizeDoor;
+        prizeDoor=generator.nextInt(3) + 1;
+        goatDoor1=prizeDoor;
 
         while (goatDoor1 == prizeDoor) {
             goatDoor1=generator.nextInt(3) + 1;
         }
-        int goatDoor2=goatDoor1;
+        goatDoor2=goatDoor1;
         while (goatDoor2 == goatDoor1 || goatDoor2 == prizeDoor) {
             goatDoor2=generator.nextInt(3) + 1;
         }
@@ -146,22 +131,21 @@ public class MontiForm extends JDialog {
         btnResult.setEnabled(false);
     }
 
-    void onChoice(){
-        if(userDoor == goatDoor1) {
-            openDoor = goatDoor2;
-            otherDoor = prizeDoor;
-        } else if(userDoor == goatDoor2) {
-            openDoor = goatDoor1;
-            otherDoor = prizeDoor;
+    void onChoice() {
+        if (userDoor == goatDoor1) {
+            openDoor=goatDoor2;
+            otherDoor=prizeDoor;
+        } else if (userDoor == goatDoor2) {
+            openDoor=goatDoor1;
+            otherDoor=prizeDoor;
         } else {
-            openDoor = goatDoor1;
-            otherDoor = goatDoor2;
+            openDoor=goatDoor1;
+            otherDoor=goatDoor2;
         }
-
-        switch (openDoor){
-            case 1: btnDoor1.setText("Коза");
-            case 2: btnDoor2.setText("Коза");
-            case 3: btnDoor3.setText("Коза");
+        switch (openDoor) {
+            case 1 -> btnDoor1.setText(GOAT);
+            case 2 -> btnDoor2.setText(GOAT);
+            case 3 -> btnDoor3.setText(GOAT);
         }
         lblHint.setText("Вы можете сменить выбранную дверь");
         btnRun.setEnabled(false);
@@ -169,5 +153,44 @@ public class MontiForm extends JDialog {
         btnResult.setEnabled(true);
     }
 
+    void onResult() {
+        btnRun.setEnabled(true);
+        btnChoice.setEnabled(false);
+        btnResult.setEnabled(false);
 
+        String Hint = "Приз находится за дверью номер: " + prizeDoor;
+
+        if (userDoor == prizeDoor) {
+            gameStatistic.put(step, WIN);
+            Hint = Hint + " Поздравляем! Вы выиграли приз!";
+        } else {
+            Hint = Hint + " Извините. Вы проиграли игру.";
+            gameStatistic.put(step, LOSS);
+        }
+        step++;
+
+        switch (prizeDoor) {
+            case 1 -> btnDoor1.setText(PRIZE);
+            case 2 -> btnDoor2.setText(PRIZE);
+            case 3 -> btnDoor3.setText(PRIZE);
+        }
+        lblHint.setText(Hint);
     }
+    void setInitialForm(){
+        btnDoor1.setBackground(Color.LIGHT_GRAY);
+        btnDoor2.setBackground(Color.LIGHT_GRAY);
+        btnDoor3.setBackground(Color.LIGHT_GRAY);
+        btnDoor1.setText("1");
+        btnDoor2.setText("2");
+        btnDoor3.setText("3");
+        userDoor=0;
+        btnDoor1.setEnabled(true);
+        btnDoor2.setEnabled(true);
+        btnDoor3.setEnabled(true);
+    }
+    void initForm(){
+        btnDoor1.setEnabled(false);
+        btnDoor2.setEnabled(false);
+        btnDoor3.setEnabled(false);
+    }
+}
